@@ -33,17 +33,13 @@
 	      <form:input path="title" type="text" class="form-control" placeholder="title"/>
 	    </div>
 	    <div class="form-group col-md-6">
-	      <label>specialty</label>
-	      <form:input path="specialty" type="text" class="form-control" placeholder="Surname"/>
+	      <label>Specialty</label>
+	      <form:input path="specialty" type="text" class="form-control" placeholder="specialty"/>
 	    </div>
 	  </div>
 	  <div class="form-group">
 	    <label for="inputAddress">Phone Number</label>
 	    <form:input path="phoneNumber" type="text" class="form-control" placeholder="Phone Number"/>
-	  </div>
-	  	  <div class="form-group">
-	    <label for="inputAddress">available</label>
-	    <form:input path="available" type="text" class="form-control" placeholder="available"/>
 	  </div>
 	  <div class="form-group">
 	    <label for="inputAddress2">Date of birth</label>

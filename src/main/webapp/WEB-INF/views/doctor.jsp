@@ -30,13 +30,15 @@
       <th scope="col">Title</th>
       <th scope="col">Specialty</th>
       <th scope="col">Action</th>
+      <th scope="col">Action</th>
+ 
     </tr>
   </thead>
   <tbody>
   	<c:forEach items="${doctors}" var="doctor">
 	  <tr>  	
       <th scope="row"></th>
-      <td>${doctor.named}</td>
+      <td>${doctor.name}</td>
       <td>${doctor.surname}</td>
       <td>${doctor.title}</td>
       <td>${doctor.specialty}</td>
@@ -48,10 +50,17 @@
 			</form>
       	</c:when>
       	<c:otherwise>
-			<button type="button" class="btn btn-warning">Brak</button>	
+			<button type="button" class="btn btn-warning">No dates</button>	
       	</c:otherwise>
 	  </c:choose>
 	  </td>
+	  <sec:authorize access="hasRole('ROLE_ADMIN')">
+	  <td>
+     	 <form action="http://localhost:8080/e-clinic/doctors/remove/${doctor.id}">
+    			<input class="btn btn-danger" type="submit" value="Delete" />
+	  	</form>
+	  </td>
+	  </sec:authorize>
     </tr>
     </c:forEach>
       <sec:authorize access="hasRole('ROLE_ADMIN')">
@@ -62,7 +71,7 @@
       <td></td>
       <td></td>
       <td>
-	      <form action="http://localhost:8080/e-clinic/reservation/doctor/add">
+	      <form action="http://localhost:8080/e-clinic/doctors/add">
 	    			<input class="btn btn-primary" type="submit" value="Add new Doctor" />
 		  </form>
 	  </td>
