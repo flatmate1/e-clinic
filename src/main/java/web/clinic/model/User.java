@@ -21,6 +21,9 @@ public class User extends PersonalDetails {
 	@Column(name="password")
 	private String password;
 	
+	@Column(name="mail")
+	private String mail;
+	
 	public String getUsername() {
 		return username;
 	}
@@ -35,6 +38,14 @@ public class User extends PersonalDetails {
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+
+	public String getMail() {
+		return mail;
+	}
+
+	public void setMail(String mail) {
+		this.mail = mail;
 	}
 
 	

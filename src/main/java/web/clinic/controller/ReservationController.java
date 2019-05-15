@@ -15,10 +15,10 @@ import web.clinic.model.ReservationDetails;
 import web.clinic.model.Review;
 import web.clinic.model.User;
 import web.clinic.service.DoctorService;
+import web.clinic.service.MailService;
 import web.clinic.service.ReservationService;
 import web.clinic.service.ReviewService;
 import web.clinic.service.UserService;
-
 
 @Controller
 public class ReservationController {
@@ -26,16 +26,18 @@ public class ReservationController {
 	private UserService userService;
 	private DoctorService doctorService;
 	private ReviewService reviewService;
+	private MailService mailService;
 
-	
 	@Autowired
 	public ReservationController(ReservationService reservationService,  UserService userService, 
-								 DoctorService doctorService, ReviewService reviewService) {
+								 DoctorService doctorService, ReviewService reviewService,
+								 MailService mailService) {
 		
 		this.reservationService = reservationService;
 		this.userService = userService;
 		this.doctorService = doctorService;
 		this.reviewService = reviewService;
+		this.mailService = mailService;
 	}
 	
 	@GetMapping("/reservation/doctor/{id}")
@@ -71,6 +73,10 @@ public class ReservationController {
 		reservationDetails.setUser(user);
 		reservationService.save(res);
 	
+		mailService.sendSimpleMessage(user.getMail(), "You've booked a visit", 
+				"You have an appointment with a " + doctor.getTitle() + " " + doctor.getName() 
+				+ " " + doctor.getSurname());
+		
 		return "redirect:/";
 	}
 	
@@ -89,7 +95,7 @@ public class ReservationController {
 	public String FinishReservation(@PathVariable(value="id") int id, Model model,
 			 @ModelAttribute("reviewForm") Review review,
 			 Authentication auth) {
-		
+	
 		Doctor doctor;
 		doctor = doctorService.getById(id);	
 		doctor.setAvailable(1);
@@ -98,8 +104,7 @@ public class ReservationController {
 		review.setDoctor(doctor);
 		doctorService.update(doctor);
 		reviewService.save(review);
-				
+		
 		return "redirect:/";
 	}
-	
 }
