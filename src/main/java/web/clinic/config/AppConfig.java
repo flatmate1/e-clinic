@@ -11,6 +11,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.ComponentScans;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.annotation.PropertySources;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.core.env.Environment;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
@@ -23,10 +24,12 @@ import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
 
 @Configuration
-@PropertySource("file:/C:/Users/test/Desktop/db/db.properties")
+@PropertySource( {"file:/C:/Users/test/Desktop/db/db.properties",
+				"file:/C:/Users/test/Desktop/mail/mail.properties"})
 @EnableTransactionManagement
 @ComponentScans(value = { @ComponentScan("web.clinic.dao"),
-	    @ComponentScan("web.clinic.service") })
+	    @ComponentScan("web.clinic.service"),
+		@ComponentScan("web.clinic.mail")})
 public class AppConfig {
 	
 	@Autowired 
@@ -88,19 +91,19 @@ public class AppConfig {
     
   
     @Bean
-    public JavaMailSender getJavaMailSender() {
+    public JavaMailSender javaMailSender() {
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
-        mailSender.setHost("smtp.gmail.com");
-        mailSender.setPort(587);
+        mailSender.setHost(env.getRequiredProperty("mail.host"));
+        mailSender.setPort(env.getRequiredProperty("mail.port", Integer.class));
          
-        mailSender.setUsername("my.gmail@gmail.com");
-        mailSender.setPassword("password");
+        mailSender.setUsername(env.getRequiredProperty("mail.username"));
+        mailSender.setPassword(env.getRequiredProperty("mail.password"));
          
         Properties props = mailSender.getJavaMailProperties();
-        props.put("mail.transport.protocol", "smtp");
-        props.put("mail.smtp.auth", "true");
-        props.put("mail.smtp.starttls.enable", "true");
-        props.put("mail.debug", "true");
+        props.put("mail.transport.protocol", env.getRequiredProperty("mail.protocol"));
+        props.put("mail.smtp.auth", env.getRequiredProperty("mail.smtp.auth"));
+        props.put("mail.smtp.starttls.enable", env.getRequiredProperty("mail.smtp.starttls.required"));
+        props.put("mail.debug", env.getRequiredProperty("mail.smtp.debug"));
          
         return mailSender;
     }
